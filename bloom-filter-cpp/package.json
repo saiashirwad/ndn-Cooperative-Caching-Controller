@@ -1,0 +1,38 @@
+{
+  "name": "bloom-filter-cpp",
+  "main": "./build/Release/bloom-filter-cpp",
+  "version": "1.2.2",
+  "description": "",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "node-addon-api": "^1.7.1"
+  },
+  "devDependencies": {
+    "cppunitlite": "^1.0.0",
+    "nan": "^2.13.2",
+    "node-gyp": "^4.0.0",
+    "pre-commit": "^1.2.2"
+  },
+  "scripts": {
+    "build": "make",
+    "test": "make test",
+    "lint": "./scripts/cpplint.py",
+    "install": "node-gyp rebuild"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bbondy/bloom-filter-cpp.git"
+  },
+  "author": "Brian R. Bondy <netzen@gmail.com> (http://www.brianbondy.com)",
+  "license": "MPL-2.0",
+  "gypfile": true,
+  "bugs": {
+    "url": "https://github.com/bbondy/bloom-filter-cpp/issues"
+  },
+  "homepage": "https://github.com/bbondy/bloom-filter-cpp#readme",
+  "pre-commit": [
+    "lint"
+  ]
+}

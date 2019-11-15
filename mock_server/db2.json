@@ -1,0 +1,19 @@
+{
+    "getUpdate": {
+        "routerID": 2,
+        "newList": [
+            "apple",
+            "photo",
+            "ball",
+            "kangaroo",
+            "museum",
+            "carrots",
+            "bugs_bunny"
+        ],
+        "delList": [
+            "cat",
+            "mouse",
+            "ball"
+        ]
+    }
+}
