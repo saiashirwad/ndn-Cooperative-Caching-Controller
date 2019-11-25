@@ -28,6 +28,14 @@ global.routers_ = [
     {
         name: "d",
         addr: "http://localhost:8891"
+    },
+    {
+        name: "e",
+        addr: "http://localhost:8892"
+    },
+    {
+        name: "f",
+        addr: "http://localhost:8893"
     }
 ];
 
@@ -101,6 +109,13 @@ global.nodeiFaceStore = {
             addrs: ["10.0.0.30", "10.0.0.29"],
             reachableNodes: []
         }
+    ],
+    'f': [
+        {
+            to: 'e',
+            addrs: ["10.0.0.34", "10.0.0.33"],
+            reachableNodes: []
+        }
     ]
 }
 
@@ -117,7 +132,7 @@ function getUpdate(routerID) {
 
 function getFaces(addr) {
     const request = axios.get(`${addr}/updateFaces`);
-    console.log(`${addr}/updateFaces`);
+    // console.log(`${addr}/updateFaces`);
 
 
     return request;
@@ -171,7 +186,14 @@ function updateRepos(router) {
             .then((result) => {
                 // console.log(result.data);
                 var nodeID = result.data.routerID;
-                const request = axios.post(`{nodeID}/updateBlooms`);
+
+                for (var i of global.nodeiFaceStore[nodeID]) {
+                    console.log(i);
+                }
+
+                const request = axios.post(`{nodeID}/updateBlooms`, {
+
+                });
                 return request;
                 // console.log(global.store);
 
@@ -217,7 +239,7 @@ awaitAll(global.routers_, updateFaces)
     //    console.log(global.nodeiFaceStore); 
        awaitAll(global.routers_, updateRepos)
             .then(() => {
-                // console.log(global.nodeWiseStore);
+                console.log(global.nodeWiseStore);
             })
             .catch((err) => {
                 console.log(err);

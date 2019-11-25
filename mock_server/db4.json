@@ -1,0 +1,28 @@
+{
+    "getUpdate": {
+        "routerID": "e",
+        "newList": [
+            "applepie",
+            "gorillapie",
+            "hippopie"
+        ],
+        "delList": [
+            "cat",
+            "mouse",
+            "ball"
+        ]
+    },
+    "updateFaces": [
+        {
+           "faceId": 4233,
+            "localUri": "10.0.0.29",
+            "remoteUri": "10.0.0.30"
+        },
+        {
+            "faceId": 333,
+            "localUri": "10.0.0.25",
+            "remoteUri": "10.0.0.26"
+        }
+
+    ]
+}
