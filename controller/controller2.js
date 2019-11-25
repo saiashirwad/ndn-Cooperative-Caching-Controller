@@ -16,6 +16,18 @@ global.routers_ = [
     {
         name: "a",
         addr: "http://localhost:8888"
+    },
+    {
+        name: "b",
+        addr: "http://localhost:8889"
+    },
+    {
+        name: "c",
+        addr: "http://localhost:8890"
+    },
+    {
+        name: "d",
+        addr: "http://localhost:8891"
     }
 ];
 
@@ -70,6 +82,10 @@ global.nodeiFaceStore = {
     ],
 }
 
+
+global.nodeWiseStore = {};
+global.store = new Set([]);
+
 function getUpdate(routerID) {
     var addr = routerID;
     const request = axios.get(`${addr}/getUpdate`);
@@ -77,7 +93,7 @@ function getUpdate(routerID) {
     return request;
 }
 
-function getUpdatedFaces(addr) {
+function getFaces(addr) {
     const request = axios.get(`${addr}/updateFaces`);
     console.log(`${addr}/updateFaces`);
 
@@ -109,7 +125,7 @@ function awaitAll(list, asyncFn) {
 
 function updateRepos(router) {
     return Promise.resolve(
-        getUpdate(router)
+        getUpdate(router.addr)
             .then(result => {
                 var duplicates = [];
                 for (var i of result.data.newList) {
@@ -136,7 +152,7 @@ function updateRepos(router) {
 
 function updateFaces(router) {
     return Promise.resolve(
-        getUpdatedFaces(router.addr)
+        getFaces(router.addr)
             .then(result => {
                 for (var face of result.data) {
                     var li = [face.localUri, face.remoteUri];
@@ -144,9 +160,8 @@ function updateFaces(router) {
                     for (var i of Object.keys(global.nodeiFaceStore)) {
                         for (var j of global.nodeiFaceStore[i]) {
                             if (JSON.stringify(li)==JSON.stringify(j.addrs)) {
-                                j.face = 231;
+                                j.face = face.faceId;
                             }
-                            // console.log(j);
                         }
                     }
 
@@ -162,7 +177,15 @@ function updateFaces(router) {
 awaitAll(global.routers_, updateFaces)
     .then(() => {
        console.log(global.nodeiFaceStore); 
+       awaitAll(global.routers_, updateRepos)
+            .then(() => {
+                console.log(global.nodeWiseStore);
+            })
+            .catch((err) => {
+                console.log(err);
+            })
     })
     .catch((err) => {
         console.log(err);
     });
+

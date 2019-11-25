@@ -15,5 +15,18 @@
             "mouse",
             "ball"
         ]
-    }
+    },
+    "updateFaces": [
+        {
+           "faceId": 233,
+            "localUri": "10.0.0.9",
+            "remoteUri": "10.0.0.10"
+        },
+        {
+            "faceId": 247,
+            "localUri": "10.0.0.13",
+            "remoteUri": "10.0.0.14"
+        }
+
+    ]
 }
