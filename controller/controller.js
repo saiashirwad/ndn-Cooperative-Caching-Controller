@@ -149,11 +149,10 @@ function getUpdate(routerID) {
 }
 
 function getFaces(addr) {
-    const request = axios.get(`http://${addr}/updateFaces`);
-    // console.log(`${addr}/updateFaces`);
-
-
-    return request;
+    var addr_ = "http://" + addr + "/facemap";
+    console.log(addr_);
+    // const request = axios.get(addr_);
+    // return request;
 }
 
 var bloomFilter = new BloomFilter();
@@ -237,29 +236,20 @@ function updateRepos(router) {
                 var arr = Array.from(combined);
                 arr = arr.sort();
 
-                // var arr = Array.from(combined);
                 // arr.sort();
-                // // console.log(arr);
 
-                if (arr != null) {
-                    var bf = '';
-                    // console.log("sup");
-                    for (var i = 0; i < 500000; i++) {
-                        // bf.concat(arr.includes(i) ? '1' : '0');
-                        // console.log(arr.includes(i));
-                        if (arr.includes(i))
-                            bf = bf.concat('1');
-                        else
-                            bf = bf.concat('0');
-                        // arr.includes(i);
-                        
-                    }
-                    console.log(bf); 
-                }
+                // console.log(result.data["routerId"]);
+                var a = "http://" + result.data["routerId"] + ":1234/updateBlooms";
+                console.log(a);
 
-                // // const request = axios.post(`{nodeID}/updateBlooms`, {
 
-                // // });
+                const request = axios.post(a, arr)
+                    .then(() => {
+
+                    })
+                    .catch(err => {
+
+                    });
                 // return request;
                 // // console.log(global.store);
 
@@ -278,50 +268,51 @@ function updateRepos(router) {
 function updateFaces(router) {
     return Promise.resolve(
         getFaces(router.addr)
-            .then(result => {
-                for (var face of result.data) {;
-                    var li = [face.localUri, face.remoteUri];
+            // .then(result => {
+            //     for (var face of result.data) {;
+            //         var li = [face.localUri, face.remoteUri];
 
-                    for (var i of Object.keys(global.nodeiFaceStore)) {
-                        for (var j of global.nodeiFaceStore[i]) {
-                            if (JSON.stringify(li)==JSON.stringify(j.addrs)) {
-                                j.face = face.faceId;
-                            }
-                        }
-                    }
+            //         for (var i of Object.keys(global.nodeiFaceStore)) {
+            //             for (var j of global.nodeiFaceStore[i]) {
+            //                 if (JSON.stringify(li)==JSON.stringify(j.addrs)) {
+            //                     j.face = face.faceId;
+            //                 }
+            //             }
+            //         }
 
-                }
+            //     }
 
-            })
-            .catch(err => {
-                console.log(err);
-            })
+            // })
+            // .catch(err => {
+            //     console.log(err);
+            // })
     );
 }
 
 
 
-// awaitAll(global.routers_, updateFaces)
-//     .then(() => {
-//     //    console.log(global.nodeiFaceStore); 
-//        awaitAll(global.routers_, updateRepos)
-//             .then(() => {
-//                 // console.log(global.nodeWiseStore);
-//                 console.log(nodeiFaceStore);
-//             })
-//             .catch((err) => {
-//                 console.log(err);
-//             })
-//     })
-//     .catch((err) => {
-//         console.log(err);
-//     });
-
-awaitAll(global.routers_, updateRepos)
-    .then( () => {
-        // console.log(global.nodeiFaceStore);
-        // console.log(global.nodeWiseStore['a']);
+awaitAll(global.routers_, updateFaces)
+    .then(() => {
+    //    console.log(global.nodeiFaceStore); 
+    //    awaitAll(global.routers_, updateRepos)
+    //         .then(() => {
+    //             // console.log(global.nodeWiseStore);
+    //             console.log(nodeiFaceStore);
+    //         })
+    //         .catch((err) => {
+    //             console.log(err);
+    //         })
     })
-    .catch( (err) => {
+    .catch((err) => {
         console.log(err);
     });
+
+// awaitAll(global.routers_, updateRepos)
+//     .then( () => {
+//         // console.log(global.nodeiFaceStore);
+//         // console.log(JSON.stringify(global.nodeiFaceStore));
+//         // console.log(global.nodeWiseStore['a']);
+//     })
+//     .catch( (err) => {
+//         console.log(err);
+//     });
