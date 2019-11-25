@@ -52,10 +52,21 @@ function getRouterID(ip) {
 
 
 function parseIp(str) {
-    var r = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/; 
+    // var r = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/; 
+    var r = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g;
+    // var r = /(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?/;
     t = str.match(r);
+    console.log(t);
     return t[0];
 }
+
+function ValidateIPaddress(ipaddress) {  
+    if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ipaddress)) {  
+      return (true)  
+    }  
+    alert("You have entered an invalid IP address!")  
+    return (false)  
+  } 
 
 global.nodeiFaceStore = {
     'a': [
@@ -150,9 +161,9 @@ function getUpdate(routerID) {
 
 function getFaces(addr) {
     var addr_ = "http://" + addr + "/facemap";
-    console.log(addr_);
-    // const request = axios.get(addr_);
-    // return request;
+    // console.log(addr_);
+    const request = axios.get(addr_);
+    return request;
 }
 
 var bloomFilter = new BloomFilter();
@@ -258,7 +269,6 @@ function updateRepos(router) {
                 // console.log(request);
             })
             .catch(err => {
-                // console.log(result.data);
                 console.log(err);
             })
     );
@@ -268,24 +278,69 @@ function updateRepos(router) {
 function updateFaces(router) {
     return Promise.resolve(
         getFaces(router.addr)
-            // .then(result => {
-            //     for (var face of result.data) {;
-            //         var li = [face.localUri, face.remoteUri];
+            .then(result => {
+                for (var item of result.data) {
+                    // var li = [face.localUri, face.remoteUri];
+                    // console.log(face);
 
-            //         for (var i of Object.keys(global.nodeiFaceStore)) {
-            //             for (var j of global.nodeiFaceStore[i]) {
-            //                 if (JSON.stringify(li)==JSON.stringify(j.addrs)) {
-            //                     j.face = face.faceId;
-            //                 }
-            //             }
-            //         }
+                    var face_ = item[0];
+                    var localUri = item[1];
+                    var remoteUri = item[2];
+                    // console.log(face_);
 
-            //     }
+                    // console.log(parseIp(localUri));
+                    // parseIp(localUri);
 
-            // })
-            // .catch(err => {
-            //     console.log(err);
-            // })
+                    // console.log(localUri);
+                    if (localUri.split("udp4://").length == 2) {
+                        var a = localUri.split("udp4://")[1];
+                        // console.log(a.split(":"));
+                        localUri = a.split(":")[0];
+                    }
+                    else
+                        continue;
+
+
+                    // console.log(localUri);
+
+                    if (remoteUri.split("udp4://").length == 2) {
+                        var a = remoteUri.split("udp4://")[1];
+                        remoteUri = a.split(":")[0];
+                    }
+                    else
+                        continue;
+                    
+                    // console.log(remoteUri);
+
+
+                    if (localUri[0] != 1) 
+                        continue;
+
+                    if (remoteUri[0] != 1)
+                        continue;
+
+                    var li = [localUri, remoteUri];
+
+                    // console.log(face_, localUri, remoteUri);
+
+
+                    for (var i of Object.keys(global.nodeiFaceStore)) {
+                        for (var j of global.nodeiFaceStore[i]) {
+                            if (JSON.stringify(li)==JSON.stringify(j.addrs)) {
+                                console.log("here");
+                                console.log(j);
+                                j.face = face_;
+                                // j["face"] =
+                            }
+                        }
+                    }
+
+                }
+
+            })
+            .catch(err => {
+                // console.log(err);
+            })
     );
 }
 
@@ -293,7 +348,7 @@ function updateFaces(router) {
 
 awaitAll(global.routers_, updateFaces)
     .then(() => {
-    //    console.log(global.nodeiFaceStore); 
+       console.log(global.nodeiFaceStore); 
     //    awaitAll(global.routers_, updateRepos)
     //         .then(() => {
     //             // console.log(global.nodeWiseStore);
