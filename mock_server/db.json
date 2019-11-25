@@ -1,6 +1,6 @@
 {
     "getUpdate": {
-        "routerID": 0,
+        "routerID": "a",
         "newList": [
             "apple",
             "photo",

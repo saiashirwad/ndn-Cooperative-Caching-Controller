@@ -80,6 +80,28 @@ global.nodeiFaceStore = {
             reachableNodes: []
         }
     ],
+    'e': [
+        {
+            to: 'a', 
+            addrs: ["10.0.0.2", "10.0.0.1"],
+            reachableNodes: []
+        },
+        {
+            to: 'b',
+            addrs: ["10.0.0.10", "10.0.0.9"],
+            reachableNodes: []
+        },
+        {
+            to: 'c', 
+            addrs: ["10.0.0.18", "10.0.0.17"],
+            reachableNodes: []
+        },
+        {
+            to: 'd',
+            addrs: ["10.0.0.30", "10.0.0.29"],
+            reachableNodes: []
+        }
+    ]
 }
 
 
