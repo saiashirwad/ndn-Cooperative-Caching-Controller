@@ -164,9 +164,23 @@ function updateRepos(router) {
                 result.data.delList.map((i) => {
                     global.store.delete(i);
                 })
+                
+                return result;
+                
+            })
+            .then((result) => {
+                // console.log(result.data);
+                var nodeID = result.data.routerID;
+                const request = axios.post(`{nodeID}/updateBlooms`);
+                return request;
+                // console.log(global.store);
+
+            })
+            .then((request) => {
+                console.log(request);
             })
             .catch(err => {
-                console.log(err);
+                // console.log(err);
             })
     );
 
@@ -188,6 +202,7 @@ function updateFaces(router) {
                     }
 
                 }
+
             })
             .catch(err => {
                 console.log(err);
@@ -196,12 +211,13 @@ function updateFaces(router) {
 }
 
 
+
 awaitAll(global.routers_, updateFaces)
     .then(() => {
-       console.log(global.nodeiFaceStore); 
+    //    console.log(global.nodeiFaceStore); 
        awaitAll(global.routers_, updateRepos)
             .then(() => {
-                console.log(global.nodeWiseStore);
+                // console.log(global.nodeWiseStore);
             })
             .catch((err) => {
                 console.log(err);
