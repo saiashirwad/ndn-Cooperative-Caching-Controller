@@ -2,6 +2,9 @@
 .PHONY: test
 .PHONY: sample
 
+
+main:
+	g++ main.cpp BloomFilter.h hashFn.h base.h 
 build:
 	 ./node_modules/.bin/node-gyp rebuild
 

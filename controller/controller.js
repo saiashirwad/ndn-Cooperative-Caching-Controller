@@ -11,6 +11,127 @@ global.routers = [
     "http://localhost:8891"
 ]
 
+
+global.routers_ = [
+    {
+        name: "a",
+
+    }
+]
+
+global.nodeiFaceStore = {
+    "a": {
+        "e" : 
+        {
+            addrs: ["10.0.0.1", "10.0.0.2"],
+            reachableNodes: []
+        },
+        "cl0" :
+        {
+            addrs: ["10.0.0.5", "10.0.0.6"],
+            reachableNodes: []
+        }
+    },
+    "b": {
+        "e" : 
+        {
+            addrs: ["10.0.0.9", "10.0.0.10"],
+            reachableNodes: []
+        },
+        "cl1" :
+        {
+            addrs: ["10.0.0.13", "10.0.0.14"],
+            reachableNodes: []
+        }
+    },
+    "c": {
+        "e" : 
+        {
+            addrs: ["10.0.0.17", "10.0.0.18"],
+            reachableNodes: []
+        },
+        "cl2" :
+        {
+            addrs: ["10.0.0.21", "10.0.0.22"],
+            reachableNodes: []
+        }
+    },
+    "d": {
+        "e" : 
+        {
+            addrs: ["10.0.0.29", "10.0.0.30"],
+            reachableNodes: []
+        },
+        "cl3" :
+        {
+            addrs: ["10.0.0.25", "10.0.0.26"],
+            reachableNodes: []
+        }
+    },
+    "e": {
+        "a" : 
+        {
+            addrs: ["10.0.0.2", "10.0.0.1"],
+            reachableNodes: []
+        },
+        "b" :
+        {
+            addrs: ["10.0.0.10", "10.0.0.9"],
+            reachableNodes: []
+        },
+        "c" : 
+        {
+            addrs: ["10.0.0.18", "10.0.0.17"],
+            reachableNodes: []
+        },
+        "d" :
+        {
+            addrs: ["10.0.0.30", "10.0.0.29"],
+            reachableNodes: []
+        }, 
+        "f" :
+        {
+            addrs: ["10.0.0.33", "10.0.0.34"],
+            reachableNodes: []
+        }
+    },
+    "f": {
+        "e" :
+        {
+            addrs: ["10.0.0.34", "10.0.0.33"],
+            reachableNodes: []
+        }
+    },
+    "cl0": {
+        "a" :
+        {
+            addrs: ["10.0.0.5", "10.0.0.6"],
+            reachableNodes: []
+        }
+    },
+    "cl1": {
+        "b" :
+        {
+            addrs: ["10.0.0.13", "10.0.0.14"],
+            reachableNodes: []
+        }
+    },
+    "cl2": {
+        "c" :
+        {
+            addrs: ["10.0.0.21", "10.0.0.22"],
+            reachableNodes: []
+        }
+    },
+    "cl3": {
+        "d" :
+        {
+            addrs: ["10.0.0.25", "10.0.0.26"],
+            reachableNodes: []
+        }
+    }
+}
+
 global.store = new Set(["apple", "ball"]);
 global.nodeWiseStore = {};
 
@@ -88,11 +209,18 @@ function updateRepos(router) {
 
 }
 
+function sendToRouter(router) {
+    return Promise.resolve({
+
+    })
+}
+
 awaitAll(global.routers, updateRepos)
     .then(() => {
-        console.log(global.nodeWiseStore);
 
-        console.log(global.store);
+        for(var node of global.nodeFaceStore) {
+            
+        }
     })
     .catch((err) => {
         console.log(err);
