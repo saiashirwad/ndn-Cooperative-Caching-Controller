@@ -327,20 +327,28 @@ function updateFaces(router) {
 }
 
 
+function loop() {
+    return Promise.resolve(awaitAll(global.routers_, updateRepos));
+}
+
 
 awaitAll(global.routers_, updateFaces)
     .then(() => {
-    //    console.log(global.nodeiFaceStore); 
-       awaitAll(global.routers_, updateRepos)
-            .then(() => {
-                // console.log(global.nodeWiseStore);
-                console.log(nodeiFaceStore);
-            })
-            .catch((err) => {
-                console.log(err);
-            })
+
+
+        
+       setInterval(loop, 1000);
+            // .then(() => {
+            //     // console.log(global.nodeWiseStore);
+            //     console.log(nodeiFaceStore);
+            // })
+            // .catch((err) => {
+            //     console.log(err);
+            // })
+
+
+
     })
     .catch((err) => {
         console.log(err);
     });
-
