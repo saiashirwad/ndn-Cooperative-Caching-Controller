@@ -196,7 +196,6 @@ function combineBloomFilters() {
 
 
 function updateRepos(router) {
-    console.log("sup");
     return Promise.resolve(
         getUpdate(router.addr)
             .then(result => {
@@ -223,46 +222,44 @@ function updateRepos(router) {
                 return result;
             })
             .then((result) => {
-                // console.log(result.data);
                 var nodeID = getRouterID(result.data["routerId"]);
-                // // for (var reachableNode of global.n)
+                var faceHashMap = {};
 
-                combined = new Set([]);
-                // console.log(nodeID);
                 for (var i of global.nodeiFaceStore[nodeID]) {
+
+                    // console.log("face", i.face);
+                    if (i.face != undefined) {
+                        combined = new Set([]);
                     for (reachableNode of i.reachableNodes) {
-                        console.log(reachableNode);
-                        // console.log(Object.keys(global.nodeWiseStore[reachableNode]));
                         if (global.nodeWiseStore[reachableNode] != null) {
                             for(var prefix in global.nodeWiseStore[reachableNode]) {
                                 for (var pos of global.nodeWiseStore[reachableNode][prefix]) {
-                                    // console.log(pos);
                                     combined.add(pos);
                                 }
                             }
                         }
                     }
+                    // console.log(combined);
+                    if (combined != new Set([])) {
+                        faceHashMap[String(i.face)] = Array.from(combined);
+                    }
+                    }
+
+                    
                 }
 
-                var arr = Array.from(combined);
-                arr = arr.sort();
+                // console.log(faceHashMap);
+                console.log(Object.keys(faceHashMap));
 
-                // arr.sort();
+                var a = "http://" + result.data["routerId"] + ":1234/filters";
 
-                // console.log(result.data["routerId"]);
-                var a = "http://" + result.data["routerId"] + ":1234/updateBlooms";
-                console.log(a);
-
-
-                const request = axios.post(a, arr)
+                const request = axios.post(a, faceHashMap)
                     .then(() => {
 
                     })
                     .catch(err => {
 
                     });
-                // return request;
-                // // console.log(global.store);
 
             })
             .then((request) => {
@@ -280,28 +277,19 @@ function updateFaces(router) {
         getFaces(router.addr)
             .then(result => {
                 for (var item of result.data) {
-                    // var li = [face.localUri, face.remoteUri];
-                    // console.log(face);
 
                     var face_ = item[0];
                     var localUri = item[1];
                     var remoteUri = item[2];
-                    // console.log(face_);
-
-                    // console.log(parseIp(localUri));
-                    // parseIp(localUri);
-
-                    // console.log(localUri);
+           
                     if (localUri.split("udp4://").length == 2) {
                         var a = localUri.split("udp4://")[1];
-                        // console.log(a.split(":"));
                         localUri = a.split(":")[0];
                     }
                     else
                         continue;
 
 
-                    // console.log(localUri);
 
                     if (remoteUri.split("udp4://").length == 2) {
                         var a = remoteUri.split("udp4://")[1];
@@ -310,7 +298,6 @@ function updateFaces(router) {
                     else
                         continue;
                     
-                    // console.log(remoteUri);
 
 
                     if (localUri[0] != 1) 
@@ -321,16 +308,11 @@ function updateFaces(router) {
 
                     var li = [localUri, remoteUri];
 
-                    // console.log(face_, localUri, remoteUri);
-
 
                     for (var i of Object.keys(global.nodeiFaceStore)) {
                         for (var j of global.nodeiFaceStore[i]) {
                             if (JSON.stringify(li)==JSON.stringify(j.addrs)) {
-                                console.log("here");
-                                console.log(j);
                                 j.face = face_;
-                                // j["face"] =
                             }
                         }
                     }
@@ -348,26 +330,17 @@ function updateFaces(router) {
 
 awaitAll(global.routers_, updateFaces)
     .then(() => {
-       console.log(global.nodeiFaceStore); 
-    //    awaitAll(global.routers_, updateRepos)
-    //         .then(() => {
-    //             // console.log(global.nodeWiseStore);
-    //             console.log(nodeiFaceStore);
-    //         })
-    //         .catch((err) => {
-    //             console.log(err);
-    //         })
+    //    console.log(global.nodeiFaceStore); 
+       awaitAll(global.routers_, updateRepos)
+            .then(() => {
+                // console.log(global.nodeWiseStore);
+                console.log(nodeiFaceStore);
+            })
+            .catch((err) => {
+                console.log(err);
+            })
     })
     .catch((err) => {
         console.log(err);
     });
 
-// awaitAll(global.routers_, updateRepos)
-//     .then( () => {
-//         // console.log(global.nodeiFaceStore);
-//         // console.log(JSON.stringify(global.nodeiFaceStore));
-//         // console.log(global.nodeWiseStore['a']);
-//     })
-//     .catch( (err) => {
-//         console.log(err);
-//     });
